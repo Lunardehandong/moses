@@ -1,0 +1,130 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { 
+    font-family: 'Segoe UI', Arial, sans-serif; 
+    height: 100vh; 
+    overflow: hidden;
+background-color: #eee; }
+
+.top-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px 30px; border-bottom: 2px solid #000; background: #eee;
+}
+
+.main-layout { display: flex; height: calc(100vh - 60px); }
+
+.sidebar {
+    width: 200px; border-right: 2px solid #000; padding: 20px;
+    display: flex; flex-direction: column; justify-content: space-between;
+}
+
+.sidebar a { display: block; text-decoration: none; color: #000; margin-bottom: 15px; font-weight: 500; }
+.sidebar a.active { font-weight: bold; text-decoration: underline; }
+
+.dashboard { flex: 1; padding: 30px; text-align: center; }
+.title { margin-bottom: 30px; font-size: 1.8em; }
+
+.chart-flex {
+    display: flex; justify-content: center; align-items: center; gap: 60px;
+    height: 450px;
+}
+
+.legend-box { text-align: left; font-size: 1.3em; }
+.legend-item { display: flex; align-items: center; margin-bottom: 20px; }
+.dot { width: 25px; height: 25px; border-radius: 50%; border: 1px solid #000; margin-right: 15px; }
+
+.v { background: #4CAF50; }
+.a { background: #FFEB3B; }
+.r { background: #F44336; }
+
+.canvas-container { width: 400px; height: 400px; }
+
+/* --- Nuevas clases para formularios y tablas --- */
+.content-area {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto; /* Permite scroll si hay muchos datos */
+}
+
+.form-registro {
+    background: #fff;
+    padding: 20px;
+    border: 2px solid #000;
+    margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    align-items: end;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+}
+
+.form-group input, .form-group select {
+    padding: 8px;
+    border: 1px solid #000;
+}
+
+hr{
+margin: 30px 0; border: 1px solid #ccc;
+} 
+
+.btn-guardar {
+    background: #4a5568;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-guardar:hover { background: #2d3748; }
+
+.tabla-datos {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+}
+
+.tabla-datos th, .tabla-datos td {
+    border: 1px solid #000;
+    padding: 10px;
+    text-align: left;
+}
+
+.tabla-datos th { background: #ddd; }
+
+.btn-save {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 5px 8px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.btn-delete {
+    background: #f44336;
+    color: white;
+    padding: 5px 8px;
+    text-decoration: none;
+    border-radius: 3px;
+    margin-left: 5px;
+    display: inline-block;
+}
+
+/* Estilo para campos que no se pueden editar */
+input[readonly] {
+    background-color: #f0f0f0;
+    border: none;
+    color: #555;
+    pointer-events: none;
+}

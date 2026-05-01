@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>MOSES SYSTEM</title>
+<link rel="stylesheet" href="../css/style_dashboard.css">
+    <!-- Cargamos la librería desde un CDN confiable -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <header class="top-bar">
+        <div class="system-name">MOSES SYSTEM</div>
+        <!-- Mostrará el Usuario y Rol reales de la sesión -->
+        <div class="user-info">
+    Usuario: <?php echo $nombre_usuario; ?> | Rol: <?php echo $rol_usuario; ?>
+</div>
+    </header>
+
+    <div class="main-layout">
+        <aside class="sidebar">
+            <nav>
+                <a href="principal.php" >Inicio</a>
+                <a href="llantas.php" >Llantas</a>
+                <a href="unidades.php" class="active">Unidades</a>
+                <a href="operadores.php">Operadores</a>
+            </nav>
+            <div class="sidebar-bottom">
+                <a href="../index.html" class="logout-btn">Cerrar Sesión</a>
+            </div>
+        </aside>
+        </div>
+
+
+</body>
+</html>

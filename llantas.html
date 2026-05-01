@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>MOSES SYSTEM - Llantas</title>
+    <link rel="stylesheet" href="../css/style_dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <header class="top-bar">
+        <div class="system-name">MOSES SYSTEM</div>
+        <div class="user-info">
+            Usuario: <?php echo $nombre_usuario; ?> | Rol: <?php echo $rol_label; ?>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <aside class="sidebar">
+            <nav>
+                <a href="principal.php">Inicio</a>
+                <a href="llantas.php" class="active">Llantas</a>
+                <a href="unidades.php">Unidades</a>
+                <a href="operadores.php">Operadores</a>
+            </nav>
+            <div class="sidebar-bottom">
+                <a href="../index.html" class="logout-btn">Cerrar Sesión</a>
+            </div>
+        </aside>
+
+        <main class="content-area">
+            <h2 class="title">Gestión Técnica de Llantas</h2>
+
+            <!-- EL FORMULARIO (Visible para todos: A, O, R) -->
+            <form action="llantas.php" method="POST" class="form-registro">
+                <div class="form-group">
+                    <label>ID Vehículo:</label>
+                    <input type="number" name="id_vehiculo" required>
+                </div>
+                <div class="form-group">
+                    <label>Clave Producto:</label>
+                    <input type="text" name="clave_prod" required>
+                </div>
+                <div class="form-group">
+                    <label>KM:</label>
+                    <input type="number" name="kilometraje" required>
+                </div>
+                <div class="form-group">
+                    <label>Edo. Físico:</label>
+                    <select name="estado_fisico" required>
+                        <option value="N">Nuevo</option>
+                        <option value="U">Usado</option>
+                        <option value="R">Reparado</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Nivel:</label>
+                    <select name="nivel_estado" required>
+                        <option value="V">V (Óptimo)</option>
+                        <option value="A">A (Aceptable)</option>
+                        <option value="R">R (Crítico)</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-guardar">Registrar</button>
+            </form>
+
+            <hr style="margin: 30px 0; border: 1px solid #ccc;">
+
+            <!-- LA TABLA (Solo visible para Administrador 'A' y Operador 'O') -->
+            <?php if ($mostrar_tabla): ?>
+                <h3 style="text-align: left; margin-bottom: 15px;">Registros Recientes</h3>
+                <table class="tabla-datos">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Vehículo</th>
+                            <th>Clave</th>
+                            <th>KM</th>
+                            <th>Físico</th>
+                            <th>Nivel</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($row = mysqli_fetch_assoc($resultado_llantas)): ?>
+                        <tr>
+                            <!-- Formulario por fila para actualización -->
+                            <form action="llantas.php" method="POST" style="display: contents;">
+                                <input type="hidden" name="id_actualizar" value="<?php echo $row['id_llanta']; ?>">
+                                
+                                <td><?php echo $row['id_llanta']; ?></td>
+                                
+                                <!-- Campos protegidos: Solo editables por Admin -->
+                                <td>
+                                    <input type="number" name="id_vehiculo" class="input-tabla" 
+                                           value="<?php echo $row['id_vehiculo']; ?>" 
+                                           <?php echo ($rol_usuario !== 'A') ? 'readonly' : ''; ?>>
+                                </td>
+                                <td>
+                                    <input type="text" name="clave_prod" class="input-tabla" 
+                                           value="<?php echo $row['clave_producto_servicio']; ?>" 
+                                           <?php echo ($rol_usuario !== 'A') ? 'readonly' : ''; ?>>
+                                </td>
+                                <td>
+                                    <input type="number" name="kilometraje" class="input-tabla" 
+                                           value="<?php echo $row['kilometraje']; ?>" 
+                                           <?php echo ($rol_usuario !== 'A') ? 'readonly' : ''; ?>>
+                                </td>
+                                
+                                <!-- Estados: Editables por Admin y Operador -->
+                                <td>
+                                    <select name="estado_fisico" class="select-tabla">
+                                        <option value="N" <?php if($row['estado_fisico']=='N') echo 'selected'; ?>>N</option>
+                                        <option value="U" <?php if($row['estado_fisico']=='U') echo 'selected'; ?>>U</option>
+                                        <option value="R" <?php if($row['estado_fisico']=='R') echo 'selected'; ?>>R</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="nivel_estado" class="select-tabla status-<?php echo strtolower($row['nivel_estado']); ?>">
+                                        <option value="V" <?php if($row['nivel_estado']=='V') echo 'selected'; ?>>V</option>
+                                        <option value="A" <?php if($row['nivel_estado']=='A') echo 'selected'; ?>>A</option>
+                                        <option value="R" <?php if($row['nivel_estado']=='R') echo 'selected'; ?>>R</option>
+                                    </select>
+                                </td>
+                                
+                                <td class="acciones">
+                                    <button type="submit" class="btn-tabla btn-save" title="Guardar Cambios">💾</button>
+                                    
+                                    <?php if($rol_usuario === 'A'): ?>
+                                        <a href="llantas.php?eliminar=<?php echo $row['id_llanta']; ?>" 
+                                           class="btn-tabla btn-delete" 
+                                           title="Eliminar" 
+                                           onclick="return confirm('¿Estás seguro de eliminar este registro?')">🗑️</a>
+                                    <?php endif; ?>
+                                </td>
+                            </form>
+                        </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <div style="background: #fff; padding: 20px; border: 1px solid #000; color: #666; text-align: center;">
+                    <strong>Aviso:</strong> Tu perfil de Reparador solo permite el ingreso de nuevos datos. 
+                    La visualización y edición de la tabla está restringida.
+                </div>
+            <?php endif; ?>
+        </main>
+    </div>
+</body>
+</html>
