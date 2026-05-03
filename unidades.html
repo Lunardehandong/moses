@@ -2,34 +2,148 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MOSES SYSTEM</title>
-<link rel="stylesheet" href="../css/style_dashboard.css">
-    <!-- Cargamos la librería desde un CDN confiable -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <title>MOSES SYSTEM - Unidades</title>
+    <link rel="stylesheet" href="../css/style_dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <header class="top-bar">
-        <div class="system-name">MOSES SYSTEM</div>
-        <!-- Mostrará el Usuario y Rol reales de la sesión -->
-        <div class="user-info">
-    Usuario: <?php echo $nombre_usuario; ?> | Rol: <?php echo $rol_usuario; ?>
-</div>
-    </header>
 
-    <div class="main-layout">
-        <aside class="sidebar">
-            <nav>
-                <a href="principal.php" >Inicio</a>
-                <a href="llantas.php" >Llantas</a>
-                <a href="unidades.php" class="active">Unidades</a>
-                <a href="operadores.php">Operadores</a>
-            </nav>
-            <div class="sidebar-bottom">
-                <a href="../index.html" class="logout-btn">Cerrar Sesión</a>
-            </div>
-        </aside>
+<header class="top-bar">
+    <div class="system-name">MOSES SYSTEM</div>
+    <div class="user-info">Usuario: <?php echo $nombre_usuario; ?></div>
+</header>
+
+<div class="main-layout">
+    <aside class="sidebar">
+        <nav>
+            <a href="principal.php">Inicio</a>
+            <a href="llantas.php">Llantas</a>
+            <a href="unidades.php" class="active">Unidades</a>
+            <a href="operadores.php">Operadores</a>
+        </nav>
+        <div class="sidebar-bottom">
+            <a href="../index.html" class="logout-btn">Cerrar Sesión</a>
+        </div>
+    </aside>
+
+    <main class="content-area">
+
+        <!-- 🔥 GRÁFICA GRANDE Y PRIMERA -->
+        <div style="width: 100%; max-width: 700px; height: 400px; margin: 0 auto 25px auto; background: #fff; padding: 15px; border-radius: 8px;">
+            <canvas id="graficaDisponibilidad"></canvas>
         </div>
 
+        <h2 class="title">Gestión de Unidades</h2>
+
+        <!-- FORM -->
+        <form action="unidades.php" method="POST" class="form-registro">
+            <div class="form-group"><label>Placas:</label><input type="text" name="placas" required></div>
+            <div class="form-group"><label>Numero unidad:</label><input type="text" name="numero_unidad" required></div>
+            <div class="form-group"><label>Modelo:</label><input type="text" name="modelo" required></div>
+            <div class="form-group"><label>Año:</label><input type="number" name="anio" required></div>
+            <button type="submit" class="btn-guardar">Registrar Unidad</button>
+        </form>
+
+        <!-- TABLA -->
+        <table class="tabla-datos">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Placas</th>
+                    <th>Numero unidad</th>
+                    <th>Mecánico</th>
+                    <th>Llantas</th>
+                    <th>Validación</th>
+                    <th>Estatus Vehiculo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while ($row = mysqli_fetch_assoc($resultado_unidades)): ?>
+                <tr>
+                    <form action="unidades.php" method="POST" style="display: contents;">
+                        <input type="hidden" name="id_actualizar" value="<?php echo $row['id_vehiculo']; ?>">
+                        
+                        <td><?php echo $row['id_vehiculo']; ?></td>
+                        <td><input type="text" name="placas" value="<?php echo $row['placas']; ?>"></td>
+                        <td><input type="text" name="numero_unidad" value="<?php echo $row['numero_unidad']; ?>"></td>
+
+                        <td>
+                            <select name="estatus_mecanico">
+                                <option value="O" <?= $row['estatus_mecanico']=='O'?'selected':'' ?>>Validado</option>
+                                <option value="F" <?= $row['estatus_mecanico']=='F'?'selected':'' ?>>Pendiente</option>
+                            </select>
+                        </td>
+
+                        <td>
+                            <select name="estatus_llantas">
+                                <option value="O" <?= $row['estatus_llantas']=='O'?'selected':'' ?>>Optimo</option>
+                                <option value="F" <?= $row['estatus_llantas']=='F'?'selected':'' ?>>Falla</option>
+                            </select>
+                        </td>
+
+                        <td>
+                            <select name="validacion_admin">
+                                <option value="P" <?= $row['validacion_admin']=='P'?'selected':'' ?>>Pendiente</option>
+                                <option value="A" <?= $row['validacion_admin']=='A'?'selected':'' ?>>Aprobado</option>
+                            </select>
+                        </td>
+
+                        <td>
+                            <select name="estatus_vh">
+                                <option value="A" <?= $row['estatus_vh']=='A'?'selected':'' ?>>Activo</option>
+                                <option value="T" <?= $row['estatus_vh']=='T'?'selected':'' ?>>Taller</option>
+                                <option value="B" <?= $row['estatus_vh']=='B'?'selected':'' ?>>Baja</option>
+                            </select>
+                        </td>
+
+                        <td>
+                            <button type="submit" class="btn-tabla btn-save">💾</button>
+                            <?php if($rol_usuario === 'A'): ?>
+                                <a href="unidades.php?eliminar=<?php echo $row['id_vehiculo']; ?>" class="btn-tabla btn-delete" onclick="return confirm('¿Eliminar?')">🗑️</a>
+                            <?php endif; ?>
+                        </td>
+                    </form>
+                </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+
+    </main>
+</div>
+
+<!-- 🔥 SCRIPT CORRECTO -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const canvas = document.getElementById('graficaDisponibilidad');
+    if (!canvas) return;
+
+    const optimos = <?php echo json_encode($optimos); ?>;
+    const noAptos = <?php echo json_encode($no_aptos); ?>;
+
+    new Chart(canvas, {
+        type: 'doughnut',
+        data: {
+            labels: ['Aptos para Salir', 'No Aptos'],
+            datasets: [{
+                data: [optimos, noAptos],
+                backgroundColor: ['#2ecc71', '#e74c3c']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' },
+                title: {
+                    display: true,
+                    text: 'Disponibilidad de Flota'
+                }
+            }
+        }
+    });
+});
+</script>
 
 </body>
 </html>
