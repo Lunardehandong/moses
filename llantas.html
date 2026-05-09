@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>MOSES SYSTEM - Llantas</title>
+    <link rel="stylesheet" href="../css/style_dashboard.css">
+</head>
+<body>
+    <header class="top-bar">
+        <div class="system-name">MOSES SYSTEM</div>
+        <!-- Usamos las variables que definiste en la lógica -->
+        <div class="user-info">Usuario: <?php echo $nombre_usuario; ?> | Rol: <?php echo $rol_label; ?></div>
+    </header>
+    <div class="main-layout">
+        <aside class="sidebar">
+            <nav>
+                <a href="principal.php">Inicio</a>
+                <a href="llantas.php" class="active">Llantas</a>
+                <a href="unidades.php">Unidades</a>
+                
+                <!-- Validación de Administrador -->
+                <?php if ($rol_usuario === 'A'): ?>
+                    <a href="operadores.php">Operadores</a>
+                    <a href="bitacora.php">Bitácora</a>
+                <?php endif; ?>
+            </nav>
+            <div class="sidebar-bottom">
+                <a href="../index.html" class="logout-btn">Cerrar Sesión</a>
+            </div>
+        </aside>
+
+        <main class="content-area">
+            <h2 class="title">Gestión Técnica de Llantas</h2>
+
+<!-- FORMULARIO DE REGISTRO CON PLACEHOLDERS ACTUALIZADOS -->
+            <?php if ($rol_usuario !== 'R'): ?>
+            <form action="unidades.php" method="POST" class="form-registro">
+                <div class="form-group">
+                    <label>Placas:</label>
+                    <input type="text" name="placas" placeholder="Ej: ABC-123-A o 12-AB-34" required>
+                </div>
+                <div class="form-group">
+                    <label>Número unidad (Eco):</label>
+                    <input type="text" name="numero_unidad" placeholder="Ej: ECO-105 o T-02" required>
+                </div>
+                <div class="form-group">
+                    <label>Modelo / Marca:</label>
+                    <input type="text" name="modelo" placeholder="Ej: Kenworth T680 / Freightliner" required>
+                </div>
+                <div class="form-group">
+                    <label>Año:</label>
+                    <input type="number" name="anio" placeholder="Ej: 2024" min="1990" max="2027" required>
+                </div>
+                <button type="submit" class="btn-guardar">Registrar Unidad</button>
+            </form>
+            <?php else: ?>
+                <div class="aviso-reparador">
+                    <strong>Modo Consulta/Edición:</strong> Como Reparador, puedes ver y actualizar estados, pero no registrar nuevas unidades.
+                </div>
+            <?php endif; ?>
+
+            <hr class="separador">
+
+            <!-- LA TABLA (Visible para todos) -->
+            <h3 class="subtitulo-tabla">Registros Recientes</h3>
+            <table class="tabla-datos">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Vehículo</th>
+                        <th>Clave</th>
+                        <th>KM</th>
+                        <th>Físico</th>
+                        <th>Nivel</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php while ($row = mysqli_fetch_assoc($resultado_llantas)): ?>
+                    <tr>
+                        <form action="llantas.php" method="POST" style="display: contents;">
+                            <input type="hidden" name="id_actualizar" value="<?php echo $row['id_llanta']; ?>">
+                            
+                            <td><?php echo $row['id_llanta']; ?></td>
+                            
+                            <!-- Campos: Editables solo por Admin -->
+                            <td>
+                            <input type="number" name="id_vehiculo" class="input-tabla" 
+                                value="<?php echo $row['id_vehiculo']; ?>" readonly>
+                            </td>
+                            <td>
+                                <input type="text" name="clave_prod" class="input-tabla" 
+                                       value="<?php echo $row['clave_producto_servicio']; ?>" 
+                                       <?php echo ($rol_usuario !== 'A') ? 'readonly' : ''; ?>>
+                            </td>
+                            <td>
+                                <input type="number" name="kilometraje" class="input-tabla" 
+                                       value="<?php echo $row['kilometraje']; ?>" 
+                                       <?php echo ($rol_usuario !== 'A') ? 'readonly' : ''; ?>>
+                            </td>
+                            
+                            <!-- Estados: Editables por TODOS (A, O, R) -->
+                            <td>
+                                <select name="estado_fisico" class="select-tabla">
+                                    <option value="N" <?php if($row['estado_fisico']=='N') echo 'selected'; ?>>N</option>
+                                    <option value="U" <?php if($row['estado_fisico']=='U') echo 'selected'; ?>>U</option>
+                                    <option value="R" <?php if($row['estado_fisico']=='R') echo 'selected'; ?>>R</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select name="nivel_estado" class="select-tabla">
+                                    <option value="V" <?php if($row['nivel_estado']=='V') echo 'selected'; ?>>V</option>
+                                    <option value="A" <?php if($row['nivel_estado']=='A') echo 'selected'; ?>>A</option>
+                                    <option value="R" <?php if($row['nivel_estado']=='R') echo 'selected'; ?>>R</option>
+                                </select>
+                            </td>
+                            
+                            <td class="acciones">
+                                <button type="submit" class="btn-save" title="Guardar Cambios">💾</button>
+                                <?php if($rol_usuario === 'A'): ?>
+                                    <a href="llantas.php?eliminar=<?php echo $row['id_llanta']; ?>" 
+                                       class="btn-delete" title="Eliminar" 
+                                       onclick="return confirm('¿Eliminar registro?')">🗑️</a>
+                                <?php endif; ?>
+                            </td>
+                        </form>
+                    </tr>
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
+        </main>
+    </div>
+</body>
+</html>

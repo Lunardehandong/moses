@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>MOSES SYSTEM - Unidades</title>
+    <link rel="stylesheet" href="../css/style_dashboard.css">
+    <!-- Cargar Chart.js desde CDN si no lo tienes local -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header class="top-bar">
+        <div class="system-name">MOSES SYSTEM</div>
+        <div class="user-info">Usuario: <?php echo $nombre_usuario; ?> | Rol: <?php echo $rol_label; ?></div>
+    </header>
+
+    <div class="main-layout">
+        <aside class="sidebar">
+            <nav>
+                <a href="principal.php">Inicio</a>
+                <a href="llantas.php">Llantas</a>
+                <a href="unidades.php" class="active">Unidades</a>
+                
+                <?php if ($rol_usuario === 'A'): ?>
+                    <a href="operadores.php">Operadores</a>
+                    <a href="bitacora.php">Bitácora</a>
+                <?php endif; ?>
+            </nav>
+            <div class="sidebar-bottom">
+                <a href="../index.html" class="logout-btn">Cerrar Sesión</a>
+            </div>
+        </aside>
+
+        <main class="content-area">
+            <div class="grafico-container">
+                <div class="canvas-wrapper" style="max-width: 300px; margin: 0 auto;">
+                    <canvas id="graficaDisponibilidad"></canvas>
+                </div>
+            </div>
+
+            <h2 class="title">Gestión de Unidades</h2>
+
+            <?php if ($rol_usuario !== 'R'): ?>
+            <form action="unidades.php" method="POST" class="form-registro">
+                <div class="form-group">
+                    <label>Placas:</label>
+                    <input type="text" name="placas" placeholder="Ej: ABC-123-A" required>
+                </div>
+                <div class="form-group">
+                    <label>Número unidad:</label>
+                    <input type="text" name="numero_unidad" placeholder="Ej: ECO-105" required>
+                </div>
+                <div class="form-group">
+                    <label>Modelo:</label>
+                    <input type="text" name="modelo" placeholder="Ej: Kenworth T680" required>
+                </div>
+                <div class="form-group">
+                    <label>Año:</label>
+                    <input type="number" name="anio" placeholder="Ej: 2024" required>
+                </div>
+                <button type="submit" class="btn-guardar">Registrar Unidad</button>
+            </form>
+            <?php else: ?>
+                <div class="aviso-reparador" style="background: #fff3cd; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                    <strong>Modo Edición Técnica:</strong> Actualiza estatus mecánicos o de llantas. El registro está restringido.
+                </div>
+            <?php endif; ?>
+
+            <table class="tabla-datos">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Placas</th>
+                        <th>Unidad</th>
+                        <th>Mecánico</th>
+                        <th>Llantas</th>
+                        <th>Jefe</th>
+                        <th>Estatus VH</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php while ($row = mysqli_fetch_assoc($resultado_unidades)): ?>
+                    <tr>
+                        <form action="unidades.php" method="POST" style="display: contents;">
+                            <input type="hidden" name="id_actualizar" value="<?php echo $row['id_vehiculo']; ?>">
+                            
+                            <td><?php echo $row['id_vehiculo']; ?></td>
+                            <td><input type="text" value="<?php echo $row['placas']; ?>" readonly class="input-tabla"></td>
+                            <td><input type="text" value="<?php echo $row['numero_unidad']; ?>" readonly class="input-tabla"></td>
+
+                            <td>
+                                <select name="estatus_mecanico" <?php echo ($rol_usuario === 'R') ? 'disabled' : ''; ?>>
+                                    <option value="O" <?= $row['estatus_mecanico']=='O'?'selected':'' ?>>Validado</option>
+                                    <option value="F" <?= $row['estatus_mecanico']=='F'?'selected':'' ?>>Pendiente</option>
+                                </select>
+                            </td>
+
+                            <td>
+                                <select name="estatus_llantas">
+                                    <option value="O" <?= $row['estatus_llantas']=='O'?'selected':'' ?>>Óptimo</option>
+                                    <option value="F" <?= $row['estatus_llantas']=='F'?'selected':'' ?>>Falla</option>
+                                </select>
+                            </td>
+
+                            <td>
+                                <select name="validacion_admin" <?php echo ($rol_usuario !== 'A') ? 'disabled' : ''; ?>>
+                                    <option value="P" <?= $row['validacion_admin']=='P'?'selected':'' ?>>Pendiente</option>
+                                    <option value="A" <?= $row['validacion_admin']=='A'?'selected':'' ?>>Aprobado</option>
+                                </select>
+                                <?php if($rol_usuario !== 'A'): ?>
+                                    <input type="hidden" name="validacion_admin" value="<?php echo $row['validacion_admin']; ?>">
+                                <?php endif; ?>
+                            </td>
+
+                            <td>
+                                <select name="estatus_vh">
+                                    <option value="A" <?= $row['estatus_vh']=='A'?'selected':'' ?>>Activo</option>
+                                    <option value="T" <?= $row['estatus_vh']=='T'?'selected':'' ?>>Taller</option>
+                                    <option value="B" <?= $row['estatus_vh']=='B'?'selected':'' ?>>Baja</option>
+                                </select>
+                            </td>
+
+                            <td class="acciones">
+                                <button type="submit" class="btn-save">💾</button>
+                                <?php if($rol_usuario === 'A'): ?>
+                                    <a href="unidades.php?eliminar=<?php echo $row['id_vehiculo']; ?>" class="btn-delete" onclick="return confirm('¿Eliminar?')">🗑️</a>
+                                <?php endif; ?>
+                            </td>
+                        </form>
+                    </tr>
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
+        </main>
+    </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const ctx = document.getElementById('graficaDisponibilidad').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Aptos', 'No Aptos'],
+                datasets: [{
+                    data: [<?php echo $optimos; ?>, <?php echo $no_aptos; ?>],
+                    backgroundColor: ['#2ecc71', '#e74c3c']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    title: { display: true, text: 'Disponibilidad de Flota' }
+                }
+            }
+        });
+    });
+    </script>
+</body>
+</html>

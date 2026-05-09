@@ -1,0 +1,113 @@
+/* Paleta de colores basada en tus imágenes */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #638d83; /* Verde azulado del fondo */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.form-container {
+    background: white;
+    padding: 40px;
+    border-radius: 4px; /* Bordes menos redondeados para un look más limpio */
+    width: 350px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+h2 {
+    color: #2d3748;
+    margin-bottom: 10px;
+    font-size: 28px;
+}
+
+.subtitle {
+    color: #718096;
+    font-size: 14px;
+    margin-bottom: 25px;
+    display: block;
+}
+
+input, select {
+    width: 100%;
+    margin: 8px 0;
+    padding: 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    box-sizing: border-box; /* Evita que el padding ensanche el input */
+    font-size: 14px;
+}
+
+input::placeholder {
+    color: #a0aec0;
+}
+
+/* Botón Estilo Login (Gris) */
+.btn-login {
+    background: #4a5568;
+    color: white;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+/* Botón Estilo Registro/Actualizar (Dorado) */
+.btn-action {
+    background: #dab050;
+    color: white;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+p {
+    margin-top: 20px;
+    font-size: 13px;
+    color: #718096;
+}
+
+a {
+    color: #4a5568;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.footer-link {
+    display: block;
+    margin-top: 15px;
+    color: #a0aec0;
+    font-size: 11px;
+}
+
+.boton__registro{
+    color: #3182ce;
+}
+
+.parrafo__password{
+    font-weight: normal; 
+    font-size: 12px; 
+    color: #3182ce;
+}
+
+.logo-login{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

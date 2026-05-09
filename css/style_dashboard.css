@@ -1,0 +1,229 @@
+/* --- Estilos Base Existentes --- */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { 
+    font-family: 'Segoe UI', Arial, sans-serif; 
+    height: 100vh; 
+    overflow: hidden;
+    background-color: #1E1E1E; /* NEGRO de la paleta */
+    color: #FFFFEF; /* BLANCO SUAVE de la paleta */
+}
+
+.top-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px 30px; border-bottom: 2px solid #556B2F; /* VERDE OLIVA */
+    background: #1E1E1E; 
+    color: #DCCBA4; /* BEIGE */
+}
+
+.main-layout { display: flex; height: calc(100vh - 60px); }
+
+.sidebar {
+    width: 200px; border-right: 2px solid #556B2F; padding: 20px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    background: #1E1E1E;
+}
+
+.sidebar a { display: block; text-decoration: none; color: #DCCBA4; margin-bottom: 15px; font-weight: 500; }
+.sidebar a.active { font-weight: bold; text-decoration: underline; color: #556B2F; }
+
+.dashboard { flex: 1; padding: 30px; text-align: center; }
+.title { margin-bottom: 30px; font-size: 1.8em; color: #DCCBA4; }
+
+.chart-flex {
+    display: flex; justify-content: center; align-items: center; gap: 60px;
+    height: 450px;
+}
+
+.legend-box { text-align: left; font-size: 1.3em; }
+.legend-item { display: flex; align-items: center; margin-bottom: 20px; }
+.dot { width: 25px; height: 25px; border-radius: 50%; border: 1px solid #DCCBA4; margin-right: 15px; }
+
+/* Colores de estados adaptados a la paleta */
+.v { background: #556B2F; } /* Verde Oliva */
+.a { background: #DCCBA4; } /* Beige */
+.r { background: #A3A323; } /* Gris/Mostaza */
+
+.canvas-container { width: 400px; height: 400px; }
+
+/* --- Secciones de Contenido --- */
+.content-area {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+    background-color: #1E1E1E;
+}
+
+/* --- NUEVAS CLASES PARA CENTRADO DE GRÁFICA --- */
+.grafico-container {
+    display: flex;
+    justify-content: center; 
+    align-items: center;     
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.canvas-wrapper {
+    width: 300px; 
+    height: 300px;
+    background: #1E1E1E;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #556B2F;
+}
+
+/* --- Formularios y Tablas --- */
+.form-registro {
+    background: #1E1E1E;
+    padding: 20px;
+    border: 2px solid #556B2F;
+    margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    align-items: end;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+    color: #DCCBA4;
+}
+
+.form-group input, .form-group select {
+    padding: 8px;
+    border: 1px solid #556B2F;
+    background: #2D2D2D;
+    color: #FFFFEF;
+}
+
+hr {
+    margin: 30px 0; border: 1px solid #556B2F;
+} 
+
+.btn-guardar {
+    background: #556B2F;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-guardar:hover { background: #455a25; }
+
+.tabla-datos {
+    width: 100%;
+    border-collapse: collapse;
+    background: #1E1E1E;
+}
+
+.tabla-datos th, .tabla-datos td {
+    border: 1px solid #556B2F;
+    padding: 10px;
+    text-align: left;
+}
+
+.tabla-datos th { background: #2D2D2D; color: #DCCBA4; }
+
+.btn-save {
+    background: #556B2F;
+    color: white;
+    border: none;
+    padding: 5px 8px;
+    cursor: pointer;
+    border-radius: 3px;
+    align-items: center;
+}
+
+.btn-delete {
+    background: #F44336;
+    color: white;
+    padding: 5px 8px;
+    text-decoration: none;
+    border-radius: 3px;
+    margin-left: 5px;
+    display: inline-block;
+}
+
+/* --- NUEVA CLASE PARA AVISO REPARADOR --- */
+.aviso-reparador {
+    background: #2D2D2D;
+    padding: 20px;
+    border: 1px solid #556B2F;
+    color: #DCCBA4;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Estilo para campos que no se pueden editar */
+input[readonly] {
+    background-color: #121212;
+    border: 1px solid #333;
+    color: #777;
+    pointer-events: none;
+}
+
+th{
+    text-align: center;
+}
+
+/* Estilos específicos para el módulo de Bitácora */
+
+.report-card {
+    background: #2D2D2D;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    border-left: 5px solid #556B2F;
+}
+
+.card-header h3 {
+    margin: 0;
+    color: #DCCBA4;
+}
+
+.card-header p {
+    color: #FFFFEF;
+    font-size: 0.9em;
+}
+
+.btn-download {
+    display: inline-block;
+    background-color: #556B2F;
+    color: white;
+    padding: 12px 25px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-top: 15px;
+    transition: background 0.3s;
+}
+
+.btn-download:hover {
+    background-color: #455a25;
+}
+
+.badge {
+    background: #556B2F;
+    color: #DCCBA4;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.subtitle {
+    margin-top: 20px;
+    color: #DCCBA4;
+    border-bottom: 2px solid #556B2F;
+    padding-bottom: 10px;
+}

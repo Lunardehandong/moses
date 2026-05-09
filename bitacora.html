@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>MOSES SYSTEM - Gestión de Bitácora</title>
+    <link rel="stylesheet" href="../css/style_dashboard.css">
+</head>
+<body>
+    <header class="top-bar">
+        <div class="system-name">MOSES SYSTEM</div>
+        <div class="user-info">Usuario: <?php echo $nombre_usuario; ?> | Rol: <?php echo $rol_label; ?></div>
+    </header>
+
+    <div class="main-layout">
+        <aside class="sidebar">
+            <nav>
+                <a href="principal.php">Inicio</a>
+                <a href="llantas.php">Llantas</a>
+                <a href="unidades.php">Unidades</a>
+                <a href="operadores.php">Operadores</a>
+                <a href="bitacora.php" class="active">Bitácora</a>
+            </nav>
+            <div class="sidebar-bottom">
+                <a href="../index.html" class="logout-btn">Cerrar Sesión</a>
+            </div>
+        </aside>
+
+        <main class="content-area">
+            <h2 class="title">Centro de Gestión de Bitácora</h2>
+
+            <div class="report-card">
+                <div class="card-header">
+                    <h3>Generar Reporte Maestro</h3>
+                    <p>Exporta Unidades, Llantas y Reparaciones Críticas.</p>
+                </div>
+                <div class="card-body">
+                    <a href="generar_excel.php" class="btn-download">📊 Descargar Excel</a>
+                </div>
+            </div>
+
+            <h3 class="subtitle">Registros de Movimientos</h3>
+            <table class="tabla-datos">
+                <thead>
+                    <tr>
+                        <th>Fecha/Hora</th>
+                        <th>Usuario</th>
+                        <th>Módulo</th>
+                        <th>Acción Realizada</th>
+                        <th>Gestión</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php while($reg = mysqli_fetch_assoc($res_recientes)): ?>
+                    <tr>
+                        <form action="bitacora.php" method="POST" style="display: contents;">
+                            <input type="hidden" name="id_actualizar" value="<?php echo $reg['id_movimiento']; ?>">
+                            <td><?php echo $reg['fecha_hora']; ?></td>
+                            <td><?php echo $reg['usuario']; ?></td>
+                            <td>
+                                <input type="text" name="modulo" value="<?php echo $reg['modulo']; ?>" class="input-tabla">
+                            </td>
+                            <td>
+                                <input type="text" name="accion" value="<?php echo $reg['accion']; ?>" class="input-tabla">
+                            </td>
+                            <td class="acciones">
+                                <button type="submit" class="btn-save">💾</button>
+                                <a href="bitacora.php?eliminar=<?php echo $reg['id_movimiento']; ?>" 
+                                   class="btn-delete" onclick="return confirm('¿Borrar registro?')">🗑️</a>
+                            </td>
+                        </form>
+                    </tr>
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
+        </main>
+    </div>
+</body>
+</html>
