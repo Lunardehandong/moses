@@ -8,7 +8,6 @@
 <body>
     <header class="top-bar">
         <div class="system-name">MOSES SYSTEM</div>
-        <!-- Usamos las variables que definiste en la lógica -->
         <div class="user-info">Usuario: <?php echo $nombre_usuario; ?> | Rol: <?php echo $rol_label; ?></div>
     </header>
     <div class="main-layout">
@@ -18,7 +17,6 @@
                 <a href="llantas.php" class="active">Llantas</a>
                 <a href="unidades.php">Unidades</a>
                 
-                <!-- Validación de Administrador -->
                 <?php if ($rol_usuario === 'A'): ?>
                     <a href="operadores.php">Operadores</a>
                     <a href="bitacora.php">Bitácora</a>
@@ -32,37 +30,47 @@
         <main class="content-area">
             <h2 class="title">Gestión Técnica de Llantas</h2>
 
-<!-- FORMULARIO DE REGISTRO CON PLACEHOLDERS ACTUALIZADOS -->
             <?php if ($rol_usuario !== 'R'): ?>
-            <form action="unidades.php" method="POST" class="form-registro">
+            <form action="llantas.php" method="POST" class="form-registro">
                 <div class="form-group">
-                    <label>Placas:</label>
-                    <input type="text" name="placas" placeholder="Ej: ABC-123-A o 12-AB-34" required>
+                    <label>Vehículo (ID/Eco):</label>
+                    <input type="number" name="id_vehiculo" placeholder="Ej: 1" required>
                 </div>
                 <div class="form-group">
-                    <label>Número unidad (Eco):</label>
-                    <input type="text" name="numero_unidad" placeholder="Ej: ECO-105 o T-02" required>
+                    <label>Clave Llanta:</label>
+                    <input type="text" name="clave_prod" placeholder="Ej: 90001" required>
                 </div>
                 <div class="form-group">
-                    <label>Modelo / Marca:</label>
-                    <input type="text" name="modelo" placeholder="Ej: Kenworth T680 / Freightliner" required>
+                    <label>Kilometraje Actual:</label>
+                    <input type="number" step="0.01" name="kilometraje" placeholder="Ej: 15000.50" required>
                 </div>
                 <div class="form-group">
-                    <label>Año:</label>
-                    <input type="number" name="anio" placeholder="Ej: 2024" min="1990" max="2027" required>
+                    <label>Estado Físico:</label>
+                    <select name="estado_fisico" class="select-registro">
+                        <option value="N">Nuevo (N)</option>
+                        <option value="U">Usado (U)</option>
+                        <option value="R">Renovado (R)</option>
+                    </select>
                 </div>
-                <button type="submit" class="btn-guardar">Registrar Unidad</button>
+                <div class="form-group">
+                    <label>Nivel:</label>
+                    <select name="nivel_estado" class="select-registro">
+                        <option value="V">Vigente (V)</option>
+                        <option value="A">Alerta (A)</option>
+                        <option value="R">Retiro (R)</option>
+                    </select>
+                </div>
+                <button type="submit" name="btn_registrar_llanta" class="btn-guardar">Registrar Llanta</button>
             </form>
             <?php else: ?>
                 <div class="aviso-reparador">
-                    <strong>Modo Consulta/Edición:</strong> Como Reparador, puedes ver y actualizar estados, pero no registrar nuevas unidades.
+                    <strong>Modo Consulta/Edición:</strong> Como Reparador, puedes actualizar estados y niveles, pero no registrar nuevas llantas.
                 </div>
             <?php endif; ?>
 
             <hr class="separador">
 
-            <!-- LA TABLA (Visible para todos) -->
-            <h3 class="subtitulo-tabla">Registros Recientes</h3>
+            <h3 class="subtitulo-tabla">Registros Recientes de Llantas</h3>
             <table class="tabla-datos">
                 <thead>
                     <tr>
@@ -83,10 +91,9 @@
                             
                             <td><?php echo $row['id_llanta']; ?></td>
                             
-                            <!-- Campos: Editables solo por Admin -->
                             <td>
-                            <input type="number" name="id_vehiculo" class="input-tabla" 
-                                value="<?php echo $row['id_vehiculo']; ?>" readonly>
+                                <input type="number" name="id_vehiculo" class="input-tabla" 
+                                    value="<?php echo $row['id_vehiculo']; ?>" readonly>
                             </td>
                             <td>
                                 <input type="text" name="clave_prod" class="input-tabla" 
@@ -94,12 +101,11 @@
                                        <?php echo ($rol_usuario !== 'A') ? 'readonly' : ''; ?>>
                             </td>
                             <td>
-                                <input type="number" name="kilometraje" class="input-tabla" 
+                                <input type="number" step="0.01" name="kilometraje" class="input-tabla" 
                                        value="<?php echo $row['kilometraje']; ?>" 
                                        <?php echo ($rol_usuario !== 'A') ? 'readonly' : ''; ?>>
                             </td>
                             
-                            <!-- Estados: Editables por TODOS (A, O, R) -->
                             <td>
                                 <select name="estado_fisico" class="select-tabla">
                                     <option value="N" <?php if($row['estado_fisico']=='N') echo 'selected'; ?>>N</option>
@@ -116,11 +122,11 @@
                             </td>
                             
                             <td class="acciones">
-                                <button type="submit" class="btn-save" title="Guardar Cambios">💾</button>
+                                <button type="submit" name="btn_actualizar" class="btn-save" title="Guardar Cambios">💾</button>
                                 <?php if($rol_usuario === 'A'): ?>
                                     <a href="llantas.php?eliminar=<?php echo $row['id_llanta']; ?>" 
                                        class="btn-delete" title="Eliminar" 
-                                       onclick="return confirm('¿Eliminar registro?')">🗑️</a>
+                                       onclick="return confirm('¿Eliminar registro de llanta?')">🗑️</a>
                                 <?php endif; ?>
                             </td>
                         </form>
